@@ -1,0 +1,12 @@
+/* src/styles/App.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  text-align: center;
+}
+
+/* Remove or comment out card-list related styles if not used */
