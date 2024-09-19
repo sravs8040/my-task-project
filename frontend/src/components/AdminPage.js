@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
+import { useStats } from '../StatsContext'; // Import useStats from StatsContext
 
-// Sample roles and courses
+
 const roles = ['Developer', 'Designer', 'Manager'];
 const courses = ['React Basics', 'UI/UX Design', 'JavaScript Essentials'];
 
 function AdminPage() {
+  const { stats, updateStats } = useStats(); // Destructure stats and updateStats from StatsContext
   const [formData, setFormData] = useState({
     name: '',
-    role: roles[0], // Default to the first role
+    role: roles[0],
     email: '',
     phoneNumber: '',
-    course: courses[0], // Default to the first course
+    course: courses[0],
     status: 'Unplaced',
   });
 
@@ -26,7 +28,23 @@ function AdminPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Update users list
     setUsers((prevUsers) => [...prevUsers, formData]);
+
+    // Update stats based on the new user status
+    const newTotalStudents = users.length + 1; // Including the new user
+    const newPlacedStudents = users.filter(user => user.status === 'Placed').length + (formData.status === 'Placed' ? 1 : 0);
+    const newUnplacedStudents = newTotalStudents - newPlacedStudents;
+
+    // Update StatsContext
+    updateStats({
+      totalStudents: newTotalStudents,
+      placedStudents: newPlacedStudents,
+      unplacedStudents: newUnplacedStudents,
+    });
+
+    // Reset the form after submission
     setFormData({
       name: '',
       role: roles[0],
@@ -45,6 +63,7 @@ function AdminPage() {
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">Fill This Form</h2>
       <form onSubmit={handleSubmit} className="mb-4">
+        {/* Form fields */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Name:</label>
           <input
@@ -127,6 +146,8 @@ function AdminPage() {
           Submit
         </button>
       </form>
+
+      {/* Display added users */}
       <div>
         {users.map((user, index) => (
           <div key={index} className="border p-4 mb-4 rounded-md">

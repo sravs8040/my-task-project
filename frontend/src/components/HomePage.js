@@ -4,25 +4,25 @@ import Partners from './Partners';
 import FeaturesSection from './FeaturesSection';
 import EmpowerSection from './EmpowerSection';
 import CardList from './CardList';
-import axios from 'axios'; // Import axios if you're making API requests
-import '../styles/App.css';
+import axios from 'axios';
+import { useStats } from '../StatsContext';
 
 function HomePage() {
-  const [cards, setCards] = useState([]); // State to store fetched cards
+  const [cards, setCards] = useState([]);
+  const { stats } = useStats();
 
-  // Fetch cards from backend
   useEffect(() => {
     const fetchCards = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/cards');
-        setCards(response.data);  // Store fetched cards in state
+        setCards(response.data);
       } catch (error) {
         console.error('Error fetching cards:', error);
       }
     };
 
     fetchCards();
-  }, []);  // Empty dependency array to run only on mount
+  }, []);
 
   return (
     <div>
@@ -30,7 +30,25 @@ function HomePage() {
       <Partners />
       <FeaturesSection />
       <EmpowerSection />
-      <CardList cards={cards} />  {/* Pass fetched cards to CardList */}
+
+      {/* Display Stats */}
+      <div className="stats-container">
+        <div className="stat-item total-students">
+          <h2>Total Students</h2>
+          <p>{stats.totalStudents}</p>
+        </div>
+        <div className="stat-item placed-students">
+          <h2>Placed Students</h2>
+          <p>{stats.placedStudents}</p>
+        </div>
+        <div className="stat-item unplaced-students">
+          <h2>Unplaced Students</h2>
+          <p>{stats.unplacedStudents}</p>
+        </div>
+      </div>
+
+      {/* CardList Component */}
+      <CardList cards={cards} />
     </div>
   );
 }

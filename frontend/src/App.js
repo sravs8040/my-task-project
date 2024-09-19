@@ -5,10 +5,15 @@ import './index.css';
 import HomePage from './components/HomePage';
 import AdminPage from './components/AdminPage';
 import Layout from './components/Layout';
+import { StatsProvider } from './StatsContext'; // Same directory
+
+
+
 
 function App() {
   return (
-    <Router>
+     <StatsProvider> {/* Wrap everything inside StatsProvider */}
+     <Router>
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -16,6 +21,7 @@ function App() {
         </Routes>
       </Layout>
     </Router>
+    </StatsProvider>
   );
 }
 
